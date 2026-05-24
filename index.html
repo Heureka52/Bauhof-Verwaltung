@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0F6E56">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Streusalz">
+<style>body{background:#F5F5F0}*{color-scheme:light only}</style>
+<title>Streusalzkisten – Bauhof</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --grn:#0F6E56;--grn-l:#E1F5EE;--grn-m:#1D9E75;
+  --warn:#BA7517;--warn-l:#FAEEDA;
+  --danger:#A32D2D;--danger-l:#FCEBEB;
+  --bg:#F5F5F0;--bg2:#fff;--bg3:#EBEBEB;
+  --txt:#1a1a1a;--txt2:#666;--txt3:#999;
+  --bdr:rgba(0,0,0,0.12);--bdr2:rgba(0,0,0,0.2);
+  --rad:10px;--rad-lg:14px;
+  --shadow:0 1px 4px rgba(0,0,0,0.08);
+}
+
+}
+
+
+#app{display:flex;flex-direction:column;position:fixed;top:0;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;background:#F5F5F0}
+.topbar{background:#ffffff;border-bottom:0.5px solid rgba(0,0,0,0.12);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;padding-top:calc(12px + env(safe-area-inset-top))}
+.topbar-title{font-size:15px;font-weight:600;flex:1}
+.topbar-sub{font-size:11px;color:#555555}
+.content{flex:1;overflow-y:scroll;-webkit-overflow-scrolling:touch;background:#F5F5F0}
+.content::-webkit-scrollbar{display:none}
+.nav{display:flex;background:#ffffff;border-top:0.5px solid rgba(0,0,0,0.12);flex-shrink:0;padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+.nav-btn{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#555555;background:none;border:none;cursor:pointer;font-family:inherit}
+.nav-btn.active{color:#0F6E56}
+.nav-btn i{font-size:22px}
+.screen{display:none;padding:12px 14px 80px}
+.screen.active{display:block}
+.sec{font-size:11px;font-weight:600;color:#555555;text-transform:uppercase;letter-spacing:.07em;margin:16px 0 8px}
+.card{background:#ffffff;border:0.5px solid rgba(0,0,0,0.12);border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:4px}
+.stat-card{background:#ffffff;border-radius:10px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.stat-lbl{font-size:11px;color:#555555;margin-bottom:4px}
+.stat-val{font-size:26px;font-weight:700;line-height:1}
+.c-ok{color:#0F6E56}.c-warn{color:#BA7517}.c-danger{color:#A32D2D}
+.badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600;display:inline-block}
+.b-ok{background:#E1F5EE;color:#085041}
+.b-warn{background:#FAEEDA;color:#633806}
+.b-leer{background:#FCEBEB;color:#791F1F}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.12)}
+.row:last-child{border-bottom:none}
+.row-main{flex:1;min-width:0}
+.row-name{font-size:13px;font-weight:600}
+.row-sub{font-size:11px;color:#555555;margin-top:2px}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dot-ok{background:#1D9E75}.dot-warn{background:#EF9F27}.dot-leer{background:#E24B4A}
+.btn{width:100%;padding:12px;border-radius:10px;border:0.5px solid rgba(0,0,0,0.2);background:#ffffff;font-size:14px;font-weight:600;cursor:pointer;color:#1a1a1a;display:flex;align-items:center;justify-content:center;gap:7px;font-family:inherit;transition:opacity .15s}
+.btn:active{opacity:.75}
+.btn-primary{background:#0F6E56;color:#fff;border-color:#0F6E56}
+.btn-danger{background:#FCEBEB;color:#A32D2D;border-color:#A32D2D}
+.btn-sm{padding:9px 14px;width:auto;font-size:13px}
+.fl{display:flex;flex-direction:column;gap:12px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.lbl{font-size:12px;font-weight:600;color:#555555}
+select,textarea,input[type=text],input[type=password]{width:100%;border:0.5px solid rgba(0,0,0,0.2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;background:#fff;color:#1a1a1a;outline:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#0F6E56}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;height:4px;-webkit-appearance:none;background:rgba(0,0,0,0.2);border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#0F6E56;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.2)}
+.sval{font-size:14px;font-weight:700;min-width:44px;text-align:right;color:#0F6E56}
+.divider{height:0.5px;background:rgba(0,0,0,0.12);margin:6px 0}
+.ok-banner{background:#E1F5EE;border:0.5px solid #1D9E75;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#085041;margin-bottom:12px}
+.err-banner{background:#FCEBEB;border:0.5px solid #A32D2D;border-radius:10px;padding:10px 12px;font-size:12px;color:#A32D2D;margin-bottom:10px}
+.map-box{background:#E1F5EE;border-radius:14px;padding:20px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#0F6E56;border:0.5px solid #1D9E75;cursor:pointer;margin-bottom:10px;font-weight:600;font-size:14px}
+.map-box i{font-size:36px}
+.tag-row{display:flex;gap:4px;flex-wrap:wrap;margin:3px 0}
+.input-row{display:flex;gap:8px}
+.input-row input,.input-row select{flex:1}
+/* Login */
+.login-wrap{padding:40px 24px;display:flex;flex-direction:column;align-items:center;background:#F5F5F0}
+.login-icon{width:76px;height:76px;background:#E1F5EE;border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:0.5px solid #1D9E75}
+.login-icon i{font-size:40px;color:#0F6E56}
+.login-h{font-size:24px;font-weight:700;margin-bottom:4px}
+.login-sub{font-size:13px;color:#555555;margin-bottom:28px}
+.tab-row{display:flex;gap:6px;margin-bottom:18px;width:100%;max-width:340px}
+.tab{flex:1;padding:10px;border-radius:10px;border:0.5px solid rgba(0,0,0,0.12);background:#EBEBEB;font-size:13px;font-weight:600;cursor:pointer;color:#555555;font-family:inherit}
+.tab.active{background:#0F6E56;color:#fff;border-color:#0F6E56}
+.login-form{width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px}
+.av{width:34px;height:34px;border-radius:50%;background:#E1F5EE;color:#0F6E56;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+/* Foto */
+.foto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.foto-box{aspect-ratio:1;border-radius:10px;border:1.5px dashed rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;cursor:pointer;font-size:11px;color:#555555;background:#EBEBEB;overflow:hidden;position:relative}
+.foto-box img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.foto-box .del-foto{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+/* Loading */
+.loading{display:flex;align-items:center;justify-content:center;padding:30px;color:#555555;gap:10px;font-size:13px}
+.spinner{width:20px;height:20px;border:2px solid rgba(0,0,0,0.12);border-top-color:#0F6E56;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{font-size:13px;color:#555555;padding:10px 0;text-align:center}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#1D9E75;display:inline-block;margin-right:4px}
+.sync-dot.off{background:#E24B4A}
+
+@media print {
+  .topbar,.nav,.card .btn,.card .fl .btn,#aw-ort,#aw-sort,.sec{display:none!important}
+  #s-auswertung{display:block!important;padding:0}
+  .print-table{font-size:11px}
+  body{background:#fff;color:#000}
+  .print-header{display:block!important}
+}
+.print-header{display:none;text-align:center;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #0F6E56}
+.print-header h2{font-size:18px;color:#0F6E56;margin-bottom:4px}
+.print-header p{font-size:12px;color:#555}
+.print-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.print-table th{background:#0F6E56;color:#fff;padding:8px 10px;text-align:left;font-weight:600;font-size:11px}
+.print-table td{padding:7px 10px;border-bottom:0.5px solid #ddd;color:#1a1a1a;vertical-align:top}
+.print-table tr:nth-child(even) td{background:#F5F5F0}
+.print-table tr:hover td{background:#E1F5EE}
+.aw-wrap{background:#fff;border-radius:14px;border:0.5px solid rgba(0,0,0,0.12);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);margin-bottom:16px}
+.aw-stat-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.aw-stat{background:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.08);flex:1;min-width:80px;text-align:center}
+.aw-stat-val{font-size:22px;font-weight:700}
+.aw-stat-lbl{font-size:11px;color:#555;margin-top:2px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- LOGIN -->
+<div id="login-screen" style="display:none">
+  <div class="login-wrap">
+    <div class="login-icon"><i class="ti ti-snowflake"></i></div>
+    <div class="login-h">Streusalzkisten</div>
+    <div class="login-sub">Bauhof Verwaltung</div>
+    <div class="tab-row">
+      <button class="tab active" onclick="setTab('ma')" id="tab-ma">Mitarbeiter</button>
+      <button class="tab" onclick="setTab('admin')" id="tab-admin"><i class="ti ti-shield" style="vertical-align:-2px;font-size:13px"></i> Chef</button>
+    </div>
+    <div class="login-form">
+      <div id="login-ma" class="fl">
+        <div class="fg"><label class="lbl">Name wählen</label>
+          <select id="sel-ma"><option value="">— Bitte wählen —</option></select></div>
+        <button class="btn btn-primary" onclick="loginMA()"><i class="ti ti-login"></i> Anmelden</button>
+        <div id="err-ma" style="display:none;font-size:12px;color:#A32D2D">Bitte Mitarbeiter wählen.</div>
+      </div>
+      <div id="login-admin" class="fl" style="display:none">
+        <div class="fg"><label class="lbl">Passwort</label>
+          <input type="password" id="pw-in" placeholder="Admin-Passwort" onkeydown="if(event.key==='Enter')loginAdmin()"></div>
+        <button class="btn btn-primary" onclick="loginAdmin()"><i class="ti ti-lock"></i> Als Chef anmelden</button>
+        <div id="err-admin" style="display:none;font-size:12px;color:#A32D2D">Falsches Passwort.</div>
+      </div>
+      <div id="login-loading" class="loading" style="display:none"><div class="spinner"></div> Verbinde...</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-screen" style="display:none;flex-direction:column;height:100%">
+  <div class="topbar">
+    <i class="ti ti-snowflake" style="font-size:20px;color:#0F6E56"></i>
+    <div style="flex:1">
+      <div class="topbar-title" id="tb-title">Streusalzkisten</div>
+      <div class="topbar-sub" id="tb-sub"></div>
+    </div>
+    <span id="sync-indicator" title="Verbindungsstatus"><span class="sync-dot"></span></span>
+    <button style="background:none;border:none;cursor:pointer;color:#555555;padding:4px 0 4px 8px" onclick="logout()">
+      <i class="ti ti-logout" style="font-size:20px;display:block"></i>
+    </button>
+  </div>
+  <div class="content" id="main-content">
+
+    <!-- DASHBOARD -->
+    <div class="screen active" id="s-dash">
+      <p class="sec">Übersicht</p>
+      <div class="stat-grid" id="stats-grid" style="display:none"></div>
+      <p class="sec">Letzte Meldungen</p>
+      <div class="card" id="dash-meldungen"><div class="loading"><div class="spinner"></div></div></div>
+      <p class="sec" id="sec-offen" style="display:none">Offene Nachbestellungen</p>
+      <div class="card" id="dash-offen" style="display:none"></div>
+    </div>
+
+    <!-- KARTE -->
+    <div class="screen" id="s-karte">
+      <p class="sec">Navigation</p>
+      <div class="map-box" onclick="openAllMap()">
+        <i class="ti ti-map-2"></i>
+        <span>Route in Google Maps öffnen</span>
+        <span style="font-size:11px;opacity:.7;font-weight:400">Alle Standorte · Optimale Route</span>
+      </div>
+      <p class="sec">Standorte</p>
+      <div class="card" id="karten-liste"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+
+    <!-- KONTROLLE -->
+    <div class="screen" id="s-kontrolle">
+      <p class="sec">Kontrolle erfassen</p>
+      <div id="ok-msg" class="ok-banner" style="display:none"><i class="ti ti-circle-check" style="font-size:20px"></i><span>Meldung gespeichert!</span></div>
+      <div id="err-msg" class="err-banner" style="display:none"></div>
+      <div class="card fl">
+        <div class="fg"><label class="lbl">Mitarbeiter</label>
+          <div style="padding:10px 12px;border:0.5px solid rgba(0,0,0,0.12);border-radius:10px;font-size:14px;font-weight:600;background:#EBEBEB" id="k-ma-name"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="fg"><label class="lbl">Ortschaft</label>
+          <select id="k-ort"><option value="">— Bitte wählen —</option></select></div>
+        <div class="fg"><label class="lbl">Kiste / Standort</label>
+          <select id="k-kiste"><option value="">— Erst Ort wählen —</option></select></div>
+        <div class="fg">
+          <label class="lbl">Zur Kiste navigieren</label>
+          <button class="btn" id="nav-btn" onclick="navToKiste()" style="justify-content:flex-start">
+            <i class="ti ti-navigation" style="color:#0F6E56"></i> In Google Maps öffnen
+          </button>
+        </div>
+        <div class="divider"></div>
+        <div class="fg">
+          <label class="lbl">Füllstand <span id="fuell-lbl" style="color:#0F6E56;font-weight:700">50%</span></label>
+          <div class="slider-row">
+            <i class="ti ti-box" style="font-size:16px;color:#888888"></i>
+            <input type="range" min="0" max="100" step="10" value="50" id="sl-fuell">
+            <span class="sval" id="fuell-val">50%</span>
+          </div>
+        </div>
+        <div class="fg"><label class="lbl">Mechanischer Zustand</label>
+          <select id="k-zustand">
+            <option value="ok">✓ In Ordnung</option>
+            <option value="kleinschaden">⚠ Kleiner Schaden</option>
+            <option value="defekt">✗ Defekt – Reparatur nötig</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Fotos (bis zu 3)</label>
+          <div class="foto-grid" id="foto-grid">
+            <div class="foto-box" onclick="fotoAufnehmen(0)"><i class="ti ti-camera" style="font-size:24px"></i><span>Foto 1</span></div>
+            <div class="foto-box" onclick="fotoAufnehmen(1)"><i class="ti ti-camera" style="font-size:24px"></i><span>Foto 2</span></div>
+            <div class="foto-box" onclick="fotoAufnehmen(2)"><i class="ti ti-camera" style="font-size:24px"></i><span>Foto 3</span></div>
+          </div>
+          <input type="file" id="foto-input" accept="image/*" capture="environment" style="display:none" onchange="fotoGespeichert(event)">
+        </div>
+        <button class="btn btn-primary" onclick="speichern()" id="senden-btn">
+          <i class="ti ti-send"></i> Meldung absenden
+        </button>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="screen" id="s-admin">
+      <p class="sec">Mitarbeiter</p>
+      <div class="card fl">
+        <div id="ma-liste"><div class="loading"><div class="spinner"></div></div></div>
+        <div class="input-row">
+          <input type="text" id="new-ma" placeholder="Name eingeben">
+          <button class="btn btn-sm btn-primary" onclick="addMA()"><i class="ti ti-plus"></i></button>
+        </div>
+      </div>
+
+      <p class="sec">Orte &amp; Kisten</p>
+      <div class="card fl">
+        <div id="orte-liste"><div class="loading"><div class="spinner"></div></div></div>
+        <div class="divider"></div>
+        <div class="fg"><label class="lbl">Neuen Ort anlegen</label>
+          <div class="input-row">
+            <input type="text" id="new-ort" placeholder="Ortsname">
+            <button class="btn btn-sm btn-primary" onclick="addOrt()"><i class="ti ti-plus"></i></button>
+          </div>
+        </div>
+        <div class="fg"><label class="lbl">Kiste zu Ort hinzufügen</label>
+          <select id="new-k-ort"><option value="">Ort wählen</option></select>
+          <div class="input-row" style="margin-top:6px">
+            <input type="text" id="new-kiste" placeholder="Straße / Standort">
+            <button class="btn btn-sm btn-primary" onclick="addKiste()"><i class="ti ti-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <p class="sec">Alle Meldungen</p>
+      <div class="card" id="alle-meldungen"><div class="loading"><div class="spinner"></div></div></div>
+
+      <p class="sec">Admin-Passwort</p>
+      <div class="card fl">
+        <div class="fg"><label class="lbl">Neues Passwort</label>
+          <input type="password" id="new-pw" placeholder="Neues Passwort"></div>
+        <button class="btn" onclick="changePW()"><i class="ti ti-lock"></i> Passwort ändern</button>
+        <div id="pw-ok" style="display:none;font-size:12px;color:#0F6E56;font-weight:600">✓ Gespeichert.</div>
+      </div>
+
+      <p class="sec">Daten</p>
+      <div class="card fl">
+        <button class="btn btn-danger" onclick="resetMeldungen()"><i class="ti ti-refresh"></i> Meldungen zurücksetzen</button>
+        <button class="btn btn-danger" onclick="clearAll()"><i class="ti ti-trash"></i> Alle Daten löschen</button>
+      </div>
+    </div>
+
+  </div>
+  <nav class="nav" id="main-nav"></nav>
+</div>
+
+    <!-- AUSWERTUNG (nur Chef) -->
+    <div class="screen" id="s-auswertung">
+      <p class="sec">Auswertung &amp; Druck</p>
+      <div class="card fl">
+        <div class="fg">
+          <label class="lbl">Nach Ort filtern</label>
+          <select id="aw-ort" onchange="renderAuswertung()">
+            <option value="">Alle Orte</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Sortierung</label>
+          <select id="aw-sort" onchange="renderAuswertung()">
+            <option value="datum-desc">Datum (neueste zuerst)</option>
+            <option value="datum-asc">Datum (älteste zuerst)</option>
+            <option value="ort">Nach Ort &amp; Kiste</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" style="flex:1" onclick="drucken()"><i class="ti ti-printer"></i> Drucken</button>
+          <button class="btn" style="flex:1" onclick="exportCSV()"><i class="ti ti-file-spreadsheet"></i> Excel/CSV</button>
+        </div>
+      </div>
+      <div id="aw-tabelle"></div>
+    </div>
+
+<!-- Versteckter Meldungs-Detail-Overlay -->
+<div id="detail-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#F5F5F0;z-index:300;overflow-y:auto;padding:16px;max-width:480px;left:50%;transform:translateX(-50%)">
+  <button onclick="closeDetail()" style="background:none;border:none;cursor:pointer;color:#0F6E56;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:16px;padding:0">
+    <i class="ti ti-arrow-left"></i> Zurück
+  </button>
+  <div id="detail-content"></div>
+</div>
+
+</div><!-- #app -->
+
+<!-- Firebase -->
+<script>
+// ── Konfig ─────────────────────────────────────────────────────────────
+const FIREBASE_URL = "https://bauhof-streusalz-default-rtdb.europe-west1.firebasedatabase.app";
+
+async function dbGet(path) {
+  try {
+    const r = await fetch(FIREBASE_URL + '/' + path + '.json');
+    if (!r.ok) return null;
+    return await r.json();
+  } catch(e) { return null; }
+}
+
+async function dbSet(path, data) {
+  try {
+    const r = await fetch(FIREBASE_URL + '/' + path + '.json', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    return r.ok;
+  } catch(e) { return false; }
+}
+
+async function dbPush(path, data) {
+  try {
+    const r = await fetch(FIREBASE_URL + '/' + path + '.json', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    if (!r.ok) return null;
+    const j = await r.json();
+    return j.name;
+  } catch(e) { return null; }
+}
+
+async function dbDelete(path) {
+  try {
+    await fetch(FIREBASE_URL + '/' + path + '.json', { method: 'DELETE' });
+    return true;
+  } catch(e) { return false; }
+}
+
+// ── State ──────────────────────────────────────────────────────────────
+let currentUser = null, isAdmin = false, loginTabVal = 'ma';
+let fotos = [null, null, null], fotoIdx = 0;
+let alleOrte = {}, alleMa = [], alleMeldungen = [];
+let pollInterval = null;
+
+// ── Login ──────────────────────────────────────────────────────────────
+window.setTab = function(t) {
+  loginTabVal = t;
+  document.getElementById('tab-ma').className = 'tab' + (t === 'ma' ? ' active' : '');
+  document.getElementById('tab-admin').className = 'tab' + (t === 'admin' ? ' active' : '');
+  document.getElementById('login-ma').style.display = t === 'ma' ? 'flex' : 'none';
+  document.getElementById('login-admin').style.display = t === 'admin' ? 'flex' : 'none';
+};
+
+async function loadKonfig() {
+  const k = await dbGet('konfig');
+  if (k) {
+    alleMa = k.ma || [];
+    alleOrte = k.orte || {};
+  }
+  const sel = document.getElementById('sel-ma');
+  if (sel) sel.innerHTML = '<option value="">— Bitte wählen —</option>' + alleMa.map(m => `<option>${m}</option>`).join('');
+}
+
+window.loginMA = async function() {
+  const v = document.getElementById('sel-ma').value;
+  if (!v) { document.getElementById('err-ma').style.display = 'block'; return; }
+  document.getElementById('err-ma').style.display = 'none';
+  currentUser = v; isAdmin = false;
+  showMain();
+};
+
+window.loginAdmin = async function() {
+  const pw = document.getElementById('pw-in').value;
+  document.getElementById('login-loading').style.display = 'flex';
+  const k = await dbGet('konfig');
+  document.getElementById('login-loading').style.display = 'none';
+  const savedPw = k && k.pw ? k.pw : 'chef123';
+  if (pw !== savedPw) {
+    document.getElementById('err-admin').style.display = 'block'; return;
+  }
+  document.getElementById('err-admin').style.display = 'none';
+  currentUser = 'Chef'; isAdmin = true;
+  showMain();
+};
+
+window.logout = function() {
+  if (pollInterval) clearInterval(pollInterval);
+  currentUser = null; isAdmin = false;
+  document.getElementById('pw-in').value = '';
+  document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'block';
+  loadKonfig();
+};
+
+// ── Main ───────────────────────────────────────────────────────────────
+async function showMain() {
+  document.getElementById('login-screen').style.display = 'none';
+  const ms = document.getElementById('main-screen');
+  ms.style.display = 'flex';
+  document.getElementById('tb-title').textContent = isAdmin ? 'Bauhof Admin' : currentUser;
+  document.getElementById('tb-sub').textContent = isAdmin ? 'Chef-Ansicht' : 'Mitarbeiter';
+  buildNav();
+  await loadAlles();
+  startPolling();
+  showTab('dash');
+}
+
+async function loadAlles() {
+  const k = await dbGet('konfig');
+  if (k) { alleMa = k.ma || []; alleOrte = k.orte || {}; }
+  const m = await dbGet('meldungen');
+  if (m) {
+    alleMeldungen = Object.entries(m).map(([id, v]) => ({ id, ...v }))
+      .sort((a, b) => b.ts - a.ts);
+  } else { alleMeldungen = []; }
+  setSyncDot(true);
+}
+
+function startPolling() {
+  if (pollInterval) clearInterval(pollInterval);
+  pollInterval = setInterval(async () => {
+    await loadAlles();
+    renderDash();
+    if (isAdmin) renderAlleMeldungen();
+  }, 5000); // Alle 5 Sekunden aktualisieren
+}
+
+function buildNav() {
+  const tabs = isAdmin
+    ? [['dash','ti-layout-dashboard','Dashboard'],['karte','ti-map','Karte'],['auswertung','ti-report','Bericht'],['admin','ti-shield','Admin']]
+    : [['dash','ti-layout-dashboard','Dashboard'],['karte','ti-map','Karte'],['kontrolle','ti-clipboard-check','Kontrolle']];
+  document.getElementById('main-nav').innerHTML = tabs.map(([id,ic,lbl]) =>
+    `<button class="nav-btn" onclick="showTab('${id}')" id="nav-${id}"><i class="ti ${ic}"></i>${lbl}</button>`
+  ).join('');
+}
+
+window.showTab = function(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const s = document.getElementById('s-' + id);
+  if (s) { s.classList.add('active'); document.getElementById('main-content').scrollTop = 0; }
+  const n = document.getElementById('nav-' + id);
+  if (n) n.classList.add('active');
+  if (id === 'karte') renderKarte();
+  if (id === 'kontrolle') renderKontrolle();
+  if (id === 'admin') renderAdmin();
+  if (id === 'auswertung') initAuswertung();
+};
+
+function setSyncDot(ok) {
+  const el = document.getElementById('sync-indicator');
+  if (el) el.innerHTML = `<span class="sync-dot ${ok?'':'off'}"></span>`;
+}
+
+// ── Dashboard ──────────────────────────────────────────────────────────
+function renderDash() {
+  const ml = alleMeldungen;
+  const ok = ml.filter(m => m.fuell >= 60 && m.zustand === 'ok').length;
+  const warn = ml.filter(m => m.fuell > 0 && m.fuell < 60 && m.zustand !== 'defekt').length;
+  const crit = ml.filter(m => m.fuell === 0 || m.zustand === 'defekt').length;
+
+  // Statistik-Kacheln: nur Chef
+  const statsGrid = document.getElementById('stats-grid');
+  if (isAdmin) {
+    statsGrid.style.display = 'grid';
+    statsGrid.innerHTML = `
+      <div class="stat-card"><div class="stat-lbl">Meldungen</div><div class="stat-val">${ml.length}</div></div>
+      <div class="stat-card"><div class="stat-lbl">Okay</div><div class="stat-val c-ok">${ok}</div></div>
+      <div class="stat-card"><div class="stat-lbl">Nachfüllen</div><div class="stat-val c-warn">${warn}</div></div>
+      <div class="stat-card"><div class="stat-lbl">Leer/Defekt</div><div class="stat-val c-danger">${crit}</div></div>`;
+  } else {
+    statsGrid.style.display = 'none';
+    statsGrid.innerHTML = '';
+  }
+
+  // Meldungen: Chef sieht alle, Mitarbeiter nur seine eigenen
+  const maSicht = isAdmin ? ml : ml.filter(m => m.ma === currentUser);
+  const recent = maSicht.slice(0, 15);
+  document.getElementById('dash-meldungen').innerHTML = recent.length ? recent.map(m => `
+    <div class="row" style="cursor:pointer" onclick="showDetail('${m.id}')">
+      <div class="dot ${dotClass(m.fuell, m.zustand)}"></div>
+      <div class="row-main">
+        <div class="row-name">${m.ort} · ${m.kiste}</div>
+        <div class="tag-row">${fuellBadge(m.fuell)} ${zustandBadge(m.zustand)}</div>
+        <div class="row-sub">${m.ma} · ${m.zeit}</div>
+      </div>
+      <i class="ti ti-chevron-right" style="font-size:15px;color:#888"></i>
+    </div>`).join('') : '<div class="empty">Noch keine Meldungen vorhanden.</div>';
+
+  // Offene Nachbestellungen: nur Chef
+  const offenCard = document.getElementById('dash-offen');
+  const offenSec = document.getElementById('sec-offen');
+  if (isAdmin) {
+    offenCard.style.display = 'block';
+    offenSec.style.display = 'block';
+    const offen = ml.filter(m => m.fuell < 50);
+    offenCard.innerHTML = offen.length ? offen.map(m => `
+      <div class="row">
+        <i class="ti ti-alert-triangle" style="font-size:18px;color:#BA7517"></i>
+        <div class="row-main">
+          <div class="row-name">${m.ort} · ${m.kiste}</div>
+          <div class="row-sub">${fuellBadge(m.fuell)} · ${m.ma} · ${m.zeit}</div>
+        </div>
+      </div>`).join('') : '<div class="empty">Alle Kisten ausreichend gefüllt.</div>';
+  } else {
+    offenCard.style.display = 'none';
+    offenSec.style.display = 'none';
+  }
+}
+
+// ── Karte ──────────────────────────────────────────────────────────────
+function renderKarte() {
+  const orte = Object.keys(alleOrte);
+  if (!orte.length) {
+    document.getElementById('karten-liste').innerHTML = '<div class="empty">Noch keine Standorte angelegt.</div>';
+    return;
+  }
+  let html = '';
+  orte.forEach(ort => {
+    const kisten = alleOrte[ort] || [];
+    kisten.forEach(k => {
+      const name = k.name || k;
+      html += `<div class="row" style="cursor:pointer" onclick="openKisteMap('${encodeURIComponent(name+', '+ort+', Deutschland')}')">
+        <i class="ti ti-map-pin" style="font-size:20px;color:#0F6E56"></i>
+        <div class="row-main"><div class="row-name">${ort} · ${name}</div></div>
+        <i class="ti ti-navigation" style="font-size:16px;color:#888"></i>
+      </div>`;
+    });
+  });
+  document.getElementById('karten-liste').innerHTML = html || '<div class="empty">Keine Standorte.</div>';
+}
+
+window.openAllMap = function() {
+  const orte = Object.keys(alleOrte);
+  const pts = orte.map(o => encodeURIComponent(o + ', Deutschland'));
+  if (pts.length) window.open('https://www.google.com/maps/dir/' + pts.join('/'), '_blank');
+};
+
+window.openKisteMap = function(q) {
+  window.open(`https://www.google.com/maps/search/?api=1&query=${q}`, '_blank');
+};
+
+// ── Kontrolle ──────────────────────────────────────────────────────────
+function renderKontrolle() {
+  document.getElementById('k-ma-name').textContent = currentUser;
+  fotos = [null, null, null];
+  renderFotoGrid();
+  const ortSel = document.getElementById('k-ort');
+  ortSel.innerHTML = '<option value="">— Bitte wählen —</option>' + Object.keys(alleOrte).map(o => `<option>${o}</option>`).join('');
+  document.getElementById('k-kiste').innerHTML = '<option value="">— Erst Ort wählen —</option>';
+  ortSel.onchange = function() {
+    const kisten = (alleOrte[this.value] || []).map(k => k.name || k);
+    document.getElementById('k-kiste').innerHTML = kisten.map(k => `<option>${k}</option>`).join('');
+  };
+}
+
+window.navToKiste = function() {
+  const ort = document.getElementById('k-ort').value;
+  const kiste = document.getElementById('k-kiste').value;
+  if (!ort || !kiste) { alert('Bitte erst Ort und Kiste wählen.'); return; }
+  const q = encodeURIComponent(kiste + ', ' + ort + ', Deutschland');
+  window.open(`https://www.google.com/maps/dir/?api=1&destination=${q}&travelmode=driving`, '_blank');
+};
+
+window.fotoAufnehmen = function(idx) { fotoIdx = idx; document.getElementById('foto-input').click(); };
+
+window.fotoGespeichert = function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => { fotos[fotoIdx] = ev.target.result; renderFotoGrid(); };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+};
+
+function renderFotoGrid() {
+  document.getElementById('foto-grid').innerHTML = [0,1,2].map(i => fotos[i]
+    ? `<div class="foto-box"><img src="${fotos[i]}"><button class="del-foto" onclick="delFoto(${i})">✕</button></div>`
+    : `<div class="foto-box" onclick="fotoAufnehmen(${i})"><i class="ti ti-camera" style="font-size:24px"></i><span>Foto ${i+1}</span></div>`
+  ).join('');
+}
+
+window.delFoto = function(i) { fotos[i] = null; renderFotoGrid(); };
+
+window.speichern = async function() {
+  const ort = document.getElementById('k-ort').value;
+  const kiste = document.getElementById('k-kiste').value;
+  if (!ort || !kiste) { showErr('Bitte Ort und Kiste auswählen.'); return; }
+  const btn = document.getElementById('senden-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Wird gespeichert...';
+  const now = new Date();
+  const zeit = now.toLocaleDateString('de-DE') + ' ' + now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  const meldung = {
+    ma: currentUser, ort, kiste,
+    fuell: parseInt(document.getElementById('sl-fuell').value),
+    zustand: document.getElementById('k-zustand').value,
+    fotos: fotos.filter(f => f !== null),
+    zeit, ts: Date.now()
+  };
+  const id = await dbPush('meldungen', meldung);
+  if (id) {
+    document.getElementById('ok-msg').style.display = 'flex';
+    setTimeout(() => document.getElementById('ok-msg').style.display = 'none', 3000);
+    document.getElementById('k-ort').value = '';
+    document.getElementById('k-kiste').innerHTML = '<option>— Erst Ort wählen —</option>';
+    document.getElementById('sl-fuell').value = 50;
+    document.getElementById('fuell-val').textContent = '50%';
+    document.getElementById('fuell-lbl').textContent = '50%';
+    document.getElementById('k-zustand').value = 'ok';
+    fotos = [null,null,null]; renderFotoGrid();
+    await loadAlles(); renderDash();
+  } else {
+    showErr('Fehler beim Speichern. Bitte Internetverbindung prüfen.');
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-send"></i> Meldung absenden';
+};
+
+function showErr(msg) {
+  const el = document.getElementById('err-msg');
+  el.textContent = msg; el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+
+// ── Detail ─────────────────────────────────────────────────────────────
+window.showDetail = function(id) {
+  const m = alleMeldungen.find(x => x.id === id);
+  if (!m) return;
+  const fotosHtml = (m.fotos||[]).length
+    ? `<div class="foto-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${m.fotos.map(f=>`<div style="aspect-ratio:1;border-radius:10px;overflow:hidden"><img src="${f}" style="width:100%;height:100%;object-fit:cover"></div>`).join('')}</div>`
+    : '<div class="empty">Keine Fotos</div>';
+  document.getElementById('detail-content').innerHTML = `
+    <div class="card fl">
+      <div style="font-size:18px;font-weight:700;color:#1a1a1a">${m.ort} · ${m.kiste}</div>
+      <div class="tag-row">${fuellBadge(m.fuell)} ${zustandBadge(m.zustand)}</div>
+      <div style="font-size:13px;color:#555">${m.ma} · ${m.zeit}</div>
+      <div class="divider"></div>
+      <div class="lbl">Fotos</div>
+      ${fotosHtml}
+      ${isAdmin ? `<button class="btn btn-danger" onclick="delMeldung('${m.id}')"><i class="ti ti-trash"></i> Meldung löschen</button>` : ''}
+    </div>`;
+  document.getElementById('detail-overlay').style.display = 'block';
+};
+
+window.closeDetail = function() { document.getElementById('detail-overlay').style.display = 'none'; };
+
+window.delMeldung = async function(id) {
+  if (!confirm('Meldung löschen?')) return;
+  await dbDelete('meldungen/' + id);
+  await loadAlles();
+  renderDash(); renderAlleMeldungen();
+  closeDetail();
+};
+
+// ── Admin ──────────────────────────────────────────────────────────────
+function renderAdmin() { renderMaListe(); renderOrteListe(); renderAlleMeldungen(); }
+
+function renderMaListe() {
+  document.getElementById('ma-liste').innerHTML = alleMa.length ? alleMa.map((m,i) => `
+    <div class="row">
+      <div class="av">${m.split(' ').map(x=>x[0]).join('')}</div>
+      <div class="row-main" style="font-size:13px;font-weight:600;color:#1a1a1a">${m}</div>
+      <button style="background:none;border:none;cursor:pointer;color:#A32D2D;padding:4px" onclick="delMA(${i})">
+        <i class="ti ti-trash" style="font-size:18px"></i>
+      </button>
+    </div>`).join('') : '<div class="empty">Keine Mitarbeiter angelegt.</div>';
+}
+
+function renderOrteListe() {
+  document.getElementById('new-k-ort').innerHTML = '<option value="">Ort wählen</option>' + Object.keys(alleOrte).map(o=>`<option>${o}</option>`).join('');
+  let html = '';
+  Object.entries(alleOrte).forEach(([ort, kisten]) => {
+    html += `<div style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:.06em">${ort}</span>
+        <button style="background:none;border:none;cursor:pointer;color:#A32D2D;font-size:12px;padding:2px 6px" onclick="delOrt('${ort}')">
+          <i class="ti ti-trash"></i> löschen
+        </button>
+      </div>
+      ${(kisten||[]).map((k,i) => `<div class="row">
+        <i class="ti ti-snowflake" style="font-size:14px;color:#888"></i>
+        <div class="row-main" style="font-size:13px;color:#1a1a1a">${k.name||k}</div>
+        <button style="background:none;border:none;cursor:pointer;color:#A32D2D;padding:4px" onclick="delKiste('${ort}',${i})">
+          <i class="ti ti-x" style="font-size:16px"></i>
+        </button>
+      </div>`).join('')}
+    </div>`;
+  });
+  document.getElementById('orte-liste').innerHTML = html || '<div class="empty">Noch keine Orte angelegt.</div>';
+}
+
+function renderAlleMeldungen() {
+  document.getElementById('alle-meldungen').innerHTML = alleMeldungen.length ? alleMeldungen.map(m => `
+    <div class="row" style="cursor:pointer" onclick="showDetail('${m.id}')">
+      <div class="dot ${dotClass(m.fuell,m.zustand)}"></div>
+      <div class="row-main">
+        <div class="row-name" style="font-size:12px">${m.ort} · ${m.kiste}</div>
+        <div class="tag-row">${fuellBadge(m.fuell)} ${zustandBadge(m.zustand)}</div>
+        <div class="row-sub">${m.ma} · ${m.zeit}${(m.fotos||[]).length ? ' · 📷 '+m.fotos.length : ''}</div>
+      </div>
+      <i class="ti ti-chevron-right" style="font-size:14px;color:#888"></i>
+    </div>`).join('') : '<div class="empty">Noch keine Meldungen.</div>';
+}
+
+window.addMA = async function() {
+  const v = document.getElementById('new-ma').value.trim();
+  if (!v) return;
+  alleMa.push(v);
+  await dbSet('konfig/ma', alleMa);
+  document.getElementById('new-ma').value = '';
+  renderMaListe();
+  const sel = document.getElementById('sel-ma');
+  if (sel) sel.innerHTML = '<option value="">— Bitte wählen —</option>' + alleMa.map(m=>`<option>${m}</option>`).join('');
+};
+
+window.delMA = async function(i) {
+  if (!confirm('Mitarbeiter löschen?')) return;
+  alleMa.splice(i,1);
+  await dbSet('konfig/ma', alleMa);
+  renderMaListe();
+};
+
+window.addOrt = async function() {
+  const v = document.getElementById('new-ort').value.trim();
+  if (!v) return;
+  if (!alleOrte[v]) alleOrte[v] = [];
+  await dbSet('konfig/orte', alleOrte);
+  document.getElementById('new-ort').value = '';
+  renderOrteListe();
+};
+
+window.delOrt = async function(ort) {
+  if (!confirm(`Ort "${ort}" und alle Kisten löschen?`)) return;
+  delete alleOrte[ort];
+  await dbSet('konfig/orte', alleOrte);
+  renderOrteListe();
+};
+
+window.addKiste = async function() {
+  const ort = document.getElementById('new-k-ort').value;
+  const name = document.getElementById('new-kiste').value.trim();
+  if (!ort || !name) { alert('Ort und Standort eingeben.'); return; }
+  if (!alleOrte[ort]) alleOrte[ort] = [];
+  alleOrte[ort].push({ name });
+  await dbSet('konfig/orte', alleOrte);
+  document.getElementById('new-kiste').value = '';
+  renderOrteListe();
+};
+
+window.delKiste = async function(ort, i) {
+  if (!confirm('Kiste löschen?')) return;
+  alleOrte[ort].splice(i,1);
+  await dbSet('konfig/orte', alleOrte);
+  renderOrteListe();
+};
+
+window.changePW = async function() {
+  const v = document.getElementById('new-pw').value;
+  if (!v) return;
+  await dbSet('konfig/pw', v);
+  document.getElementById('new-pw').value = '';
+  const ok = document.getElementById('pw-ok');
+  ok.style.display = 'block'; setTimeout(() => ok.style.display = 'none', 2500);
+};
+
+window.resetMeldungen = async function() {
+  if (!confirm('Alle Meldungen löschen?')) return;
+  await dbDelete('meldungen');
+  alleMeldungen = [];
+  renderDash(); renderAlleMeldungen();
+};
+
+window.clearAll = async function() {
+  if (!confirm('ACHTUNG: Diese Aktion löscht ALLE Daten!\n\nMitarbeiter, Orte, Kisten und alle Meldungen werden unwiderruflich gelöscht.\n\nWirklich fortfahren?')) return;
+  if (!confirm('Letzte Sicherheitsfrage:\n\nSind Sie absolut sicher? Diese Aktion kann NICHT rückgängig gemacht werden!')) return;
+  await dbDelete('meldungen');
+  await dbSet('konfig', { ma: [], orte: {}, pw: 'chef123' });
+  alleMa = []; alleOrte = {}; alleMeldungen = [];
+  renderAdmin(); renderDash();
+};
+
+// ── Auswertung ─────────────────────────────────────────────────────────
+function initAuswertung() {
+  const sel = document.getElementById('aw-ort');
+  const orte = [...new Set(alleMeldungen.map(m => m.ort))].sort();
+  sel.innerHTML = '<option value="">Alle Orte</option>' + orte.map(o => `<option>${o}</option>`).join('');
+  renderAuswertung();
+}
+
+window.renderAuswertung = function() {
+  const ortFilter = document.getElementById('aw-ort').value;
+  const sort = document.getElementById('aw-sort').value;
+  let ml = [...alleMeldungen];
+  if (ortFilter) ml = ml.filter(m => m.ort === ortFilter);
+  if (sort === 'datum-asc') ml.sort((a,b) => a.ts - b.ts);
+  else if (sort === 'datum-desc') ml.sort((a,b) => b.ts - a.ts);
+  else if (sort === 'ort') ml.sort((a,b) => (a.ort+a.kiste).localeCompare(b.ort+b.kiste));
+
+  const total = ml.length;
+  const ok = ml.filter(m => m.fuell >= 60 && m.zustand === 'ok').length;
+  const warn = ml.filter(m => m.fuell > 0 && m.fuell < 60).length;
+  const defekt = ml.filter(m => m.zustand === 'defekt').length;
+  const leer = ml.filter(m => m.fuell === 0).length;
+
+  const now = new Date().toLocaleDateString('de-DE');
+  const filterText = ortFilter ? `Ort: ${ortFilter}` : 'Alle Orte';
+
+  document.getElementById('aw-tabelle').innerHTML = `
+    <div class="print-header" id="print-header">
+      <h2>Streusalzkisten – Kontrollprotokoll</h2>
+      <p>Bauhof · Auswertung vom ${now} · ${filterText}</p>
+    </div>
+    <div class="aw-stat-row">
+      <div class="aw-stat"><div class="aw-stat-val">${total}</div><div class="aw-stat-lbl">Gesamt</div></div>
+      <div class="aw-stat"><div class="aw-stat-val c-ok">${ok}</div><div class="aw-stat-lbl">Okay</div></div>
+      <div class="aw-stat"><div class="aw-stat-val c-warn">${warn}</div><div class="aw-stat-lbl">Nachfüllen</div></div>
+      <div class="aw-stat"><div class="aw-stat-val c-danger">${leer}</div><div class="aw-stat-lbl">Leer</div></div>
+      <div class="aw-stat"><div class="aw-stat-val c-danger">${defekt}</div><div class="aw-stat-lbl">Defekt</div></div>
+    </div>
+    <div class="aw-wrap">
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th>Datum / Uhrzeit</th>
+            <th>Ort</th>
+            <th>Standort / Kiste</th>
+            <th>Mitarbeiter</th>
+            <th>Füllstand</th>
+            <th>Zustand</th>
+            <th>Fotos</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ml.length ? ml.map(m => `<tr>
+            <td style="white-space:nowrap">${m.zeit}</td>
+            <td>${m.ort}</td>
+            <td>${m.kiste}</td>
+            <td>${m.ma}</td>
+            <td>${fuellCell(m.fuell)}</td>
+            <td>${zustandCell(m.zustand)}</td>
+            <td style="text-align:center">${(m.fotos||[]).length ? '📷 '+(m.fotos||[]).length : '–'}</td>
+          </tr>`).join('') : '<tr><td colspan="7" style="text-align:center;padding:16px;color:#888">Keine Meldungen gefunden.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:11px;color:#888;text-align:right;margin-top:4px">
+      ${total} Einträge · Stand: ${now}
+    </div>`;
+};
+
+function fuellCell(f) {
+  const col = f >= 60 ? '#085041' : f >= 20 ? '#633806' : '#791F1F';
+  const bg = f >= 60 ? '#E1F5EE' : f >= 20 ? '#FAEEDA' : '#FCEBEB';
+  return `<span style="background:${bg};color:${col};padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600">${f}%</span>`;
+}
+function zustandCell(z) {
+  if (z === 'ok') return '<span style="background:#E1F5EE;color:#085041;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600">OK</span>';
+  if (z === 'kleinschaden') return '<span style="background:#FAEEDA;color:#633806;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600">Schaden</span>';
+  return '<span style="background:#FCEBEB;color:#791F1F;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600">Defekt</span>';
+}
+
+window.drucken = function() {
+  document.getElementById('print-header').style.display = 'block';
+  window.print();
+  setTimeout(() => document.getElementById('print-header').style.display = 'none', 1000);
+};
+
+window.exportCSV = function() {
+  const ortFilter = document.getElementById('aw-ort').value;
+  const sort = document.getElementById('aw-sort').value;
+  let ml = [...alleMeldungen];
+  if (ortFilter) ml = ml.filter(m => m.ort === ortFilter);
+  if (sort === 'datum-asc') ml.sort((a,b) => a.ts - b.ts);
+  else if (sort === 'datum-desc') ml.sort((a,b) => b.ts - a.ts);
+  else ml.sort((a,b) => (a.ort+a.kiste).localeCompare(b.ort+b.kiste));
+
+  const bom = '\uFEFF'; // Excel UTF-8 BOM
+  const header = 'Datum/Uhrzeit;Ort;Standort/Kiste;Mitarbeiter;Füllstand %;Zustand;Fotos';
+  const rows = ml.map(m => [
+    m.zeit, m.ort, m.kiste, m.ma, m.fuell,
+    m.zustand === 'ok' ? 'In Ordnung' : m.zustand === 'kleinschaden' ? 'Kleiner Schaden' : 'Defekt - Reparatur nötig',
+    (m.fotos||[]).length
+  ].join(';'));
+  const csv = bom + header + '\n' + rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Streusalzkisten_' + new Date().toLocaleDateString('de-DE').replace(/\./g,'-') + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+// ── Helpers ────────────────────────────────────────────────────────────
+function fuellBadge(f) {
+  if (f >= 60) return `<span class="badge b-ok">${f}%</span>`;
+  if (f >= 20) return `<span class="badge b-warn">${f}%</span>`;
+  return `<span class="badge b-leer">${f}%</span>`;
+}
+function zustandBadge(z) {
+  if (z === 'ok') return '<span class="badge b-ok">OK</span>';
+  if (z === 'kleinschaden') return '<span class="badge b-warn">Schaden</span>';
+  return '<span class="badge b-leer">Defekt</span>';
+}
+function dotClass(f,z) {
+  if (z === 'defekt' || f === 0) return 'dot-leer';
+  return f < 60 ? 'dot-warn' : 'dot-ok';
+}
+
+// ── Slider ─────────────────────────────────────────────────────────────
+document.getElementById('sl-fuell').addEventListener('input', function() {
+  document.getElementById('fuell-val').textContent = this.value + '%';
+  document.getElementById('fuell-lbl').textContent = this.value + '%';
+});
+
+// ── Start ──────────────────────────────────────────────────────────────
+document.getElementById('login-screen').style.display = 'block';
+loadKonfig();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  const sw = `const C='ssv2';self.addEventListener('install',e=>{self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n!==C).map(n=>caches.delete(n)))))});self.addEventListener('fetch',e=>{if(e.request.url.includes('firestore')||e.request.url.includes('firebase'))return;e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)))})`;
+  const b = new Blob([sw], {type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(b)).catch(()=>{});
+}
+</script>
+</body>
+</html>
